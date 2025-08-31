@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import AnalogClock from './analogClock';
+import Counter from "./Counter"
 
 function App() {
 
@@ -40,7 +41,10 @@ function App() {
       "12h"
      )}>Switch to  {mode==="24h" ? "12h" :"24h"} mode</button>
      <div></div>
-     <div><AnalogClock/></div>
+     <div style={{ margin:"70px"}}><AnalogClock/></div>
+
+     <div><Counter/></div>
+     
     </>
   )
 }
