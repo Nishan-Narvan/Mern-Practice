@@ -1,12 +1,11 @@
-import  mongoose from 'mongoose '
+import  mongoose from 'mongoose'
+console.log("Mongodb line ran")
 
 
-mongoose.connect()
 
 
+const Schema =mongoose.Schema
 
-const Schema =new mongoose.Schema
-const ObjectId = mongoose.Types.ObjectId
 
 const userSchema = new Schema({ 
 email:{
@@ -45,15 +44,17 @@ title: { type: String},
 description:{ type: String},
 price: { type: Number},
 imageUrl: { type: String},
-createdId: ObjectId 
+createdId: { type: mongoose.Schema.Types.ObjectId }
+
 })
 
 
 
 const purchaseSchema = new Schema({
 
-    userId: ObjectId ,
-    courseId: ObjectId 
+   userId: { type: mongoose.Schema.Types.ObjectId },
+courseId: { type: mongoose.Schema.Types.ObjectId }
+
 })
 
 
@@ -64,4 +65,4 @@ const purchaseModel = mongoose.model("purchase",purchaseSchema)
 
 
 
-module.exports= { userModel, adminModel,courseModel,purchaseModel}
+export { userModel, adminModel,courseModel,purchaseModel}
