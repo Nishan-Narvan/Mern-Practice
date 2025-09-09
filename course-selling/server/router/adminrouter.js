@@ -1,16 +1,17 @@
 import express from "express"
-import { adminModel} from "../models/userSchema.js";
+import { adminModel, courseModel} from "../models/userSchema.js";
 import jwt from  "jsonwebtoken"
 import authware from "../middlewares/auth.js";
-const  JWT_USER_PASSWORD = "adam22"
+import dotenv from "dotenv"
+
 
 
 const admin= express.Router();
 
 admin.post("/signup", async (req,res)=>{
-
-
-    const {email, password, firstName, lastName} = req.body;
+    try{
+     
+        const {email, password, firstName, lastName} = req.body;
 
     const user= await adminModel.create({
 
@@ -23,6 +24,18 @@ admin.post("/signup", async (req,res)=>{
 
 
     )
+
+    }catch(err){
+
+
+         res.status(400).json({ error: err.message });
+
+
+    }
+    
+   
+
+    
 })
 
 
@@ -40,7 +53,7 @@ admin.post("/signin", async (req,res )=> {
         const token= jwt.sign({
             id: user._id
 
-        }, JWT_USER_PASSWORD);
+        }, process.env.JWT_USER_PASSWORD);
 
         res.json({ token: token, message: " sign in successfull" })
     }else{
@@ -48,8 +61,56 @@ admin.post("/signin", async (req,res )=> {
 })
 
 
-admin.get("/protected",authware, (req,res)=>{
-    res.status(200).json({message:"this is my protected route"})
+admin.post("/coursescreation",authware, async (req,res)=>{
+
+
+    const adminId = req.userId;
+    const {title,description,price,imageUrl} = req.body;
+    
+    const course = await courseModel.create({
+      title,description,price,imageUrl,createdId: adminId
+
+    })
+
+    res.status(200).json({message:"this is my protected route, course created", course: course._id})
+})
+
+admin.put("/course", authware, async function(req,res){
+
+    const adminId= req.userId
+    const {title,description,price,imageUrl, courseId} = req.body;
+
+    const updatedcourse= await courseModel.updateOne({
+         _id: courseId,
+          createdId:adminId
+    },{
+
+        title,
+         description,
+         price,
+         imageUrl,
+         
+    })
+    if(!updatedcourse) return res.json({message: "You are not the creator of the course, invalid request"})
+  
+    res.json({ message: "course updated", courseId: updatedcourse._id})
+
+})
+
+
+admin.get("/mycourses", authware,async(req,res)=>{
+
+    const adminId = req.userId
+
+    const courses = await courseModel.find({
+      createdId: adminId
+    })
+
+    res.json({
+
+        
+        mycourses:courses
+    })
 })
 
 

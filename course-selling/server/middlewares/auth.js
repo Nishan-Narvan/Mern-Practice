@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+const JWT_USER_PASSWORD = "adam22"
 
 const authware = (req, res, next) => {
   try {
@@ -8,7 +9,11 @@ const authware = (req, res, next) => {
     const token = auth.split(" ")[1];
     if (!token) return res.status(401).json({ message: "Token not provided" });
 
-    const payload = jwt.verify(token, JWT_SECRET); // throws if invalid
+    const payload = jwt.verify(token,JWT_USER_PASSWORD ); 
+    req.userId = payload.id;
+    
+    // throws if invalid
+    // jwt.verify return karta hai payload jo signin token creation ke time diya gaya tha db mein se-aur is time vo hum req mein daal dete hain, token creation p[payload]k[key secret]o[options-expiry], token-[header.payoload.signature(the hash from header and payload using JWT secret key)]
     req.user = payload;
     next();
   } catch (err) {

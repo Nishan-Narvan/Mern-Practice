@@ -40,11 +40,11 @@ firstName:{  type: String,},
 
 const courseSchema = new Schema({ 
 
-title: { type: String},
+title:{  type: String},
 description:{ type: String},
-price: { type: Number},
+price:{  type: Number},
 imageUrl: { type: String},
-createdId: { type: mongoose.Schema.Types.ObjectId }
+createdId:{ type: mongoose.Schema.Types.ObjectId }
 
 })
 

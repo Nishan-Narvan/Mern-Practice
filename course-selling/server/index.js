@@ -3,6 +3,9 @@ import userRouter from "./router/userRoutes.js"
 import courseRouter from  "./router/courseRoutes.js"
 import adminrouter from "./router/adminrouter.js"
 import mongoose from 'mongoose'
+import dotenv from "dotenv"
+
+dotenv.config();
 
 const app =express();
 app.use(express.json())
@@ -14,8 +17,8 @@ app.get("/", (req,res)=>{
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(
-      "mongodb+srv://nion:nionpass@cluster0.6yualkf.mongodb.net/courseback?retryWrites=true&w=majority&appName=Cluster0"
+    await mongoose.connect(process.env.MONGO_URL
+      
     );
     console.log("✅ Connected to MongoDB Atlas");
   } catch (err) {

@@ -7,7 +7,7 @@ import authware from '../middlewares/auth.js';
 
 
 
-const JWT_SECRET = "change_me";
+
 
 
 const userRouter = express.Router()
@@ -54,7 +54,7 @@ userRouter.post("/signin", async(req,res)=>{
   
 
   const payload = { id: user._id, email: user.email }
-  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "30m"})
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "30m"})
     res.cookie("token", token, {
     httpOnly: true,
     secure: false, // true in production (HTTPS)
