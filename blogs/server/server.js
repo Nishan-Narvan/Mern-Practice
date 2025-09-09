@@ -18,7 +18,7 @@ app.use(cors({
 }));
 
 
-mongoose.connect('mongodb+srv://nion:' + 'nionpass' + '@cluster0.6yualkf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log("Connected to Mongodb atlas"))
     .catch((err) => console.error("Error connecting to MongoDB", err));
 
@@ -33,5 +33,5 @@ app.use("/api/blogs", blogRoutes)
 const PORT = process.env.PORT
 
 app.listen(PORT, ()=>{
-    console.log("Hey my server started")
+    console.log("Hey my server started at port",PORT)
 })
