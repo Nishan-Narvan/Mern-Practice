@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-const JWT_USER_PASSWORD = "adam22"
+const JWT_ADMIN_PASSWORD = "adam22"
 
 const authware = (req, res, next) => {
   try {
@@ -9,7 +9,7 @@ const authware = (req, res, next) => {
     const token = auth.split(" ")[1];
     if (!token) return res.status(401).json({ message: "Token not provided" });
 
-    const payload = jwt.verify(token,JWT_USER_PASSWORD ); 
+    const payload = jwt.verify(token,ADMIN_PASSWORD ); 
     req.userId = payload.id;
     
     // throws if invalid

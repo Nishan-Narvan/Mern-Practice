@@ -1,8 +1,8 @@
 import express from 'express'
-import {  userModel } from "../models/userSchema.js";
+import {  purchaseModel, userModel } from "../models/userSchema.js";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
-import authware from '../middlewares/auth.js';
+import userware from '../middlewares/usermiddleware.js';
 
 
 
@@ -37,7 +37,7 @@ userRouter.post("/signup", async(req,res)=>{
     firstName: firstName,
     lastName: lastName
   })
-  res.json({message: "signup done", userId: "user._id" })
+  res.json({message: "signup done", userId: user._id })
 })
 
 
@@ -54,22 +54,39 @@ userRouter.post("/signin", async(req,res)=>{
   
 
   const payload = { id: user._id, email: user.email }
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "30m"})
+  const token = jwt.sign(payload, process.env.JWT_USER_SECRET, { expiresIn: "30m"})
     res.cookie("token", token, {
     httpOnly: true,
     secure: false, // true in production (HTTPS)
     sameSite: "lax",
     maxAge: 15 * 60 * 1000
   });
-  res.json({ message: "logged in (jwt issued)" });
+  res.json({ message: "logged in (jwt issued)", token:token });
 })
 
 
 
 
-userRouter.get("/purchases", authware,(req,res)=>{
-    res.json({ message: "These are your purchases"})
-})
+userRouter.get("/purchases", userware, async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const purchases = await purchaseModel
+      .find({ userId })
+      .populate("courseId"); // yahan courseId ke andar course details aajayenge
+
+    if (purchases.length === 0) {
+      return res.json({ message: "You have not purchased any courses yet" });
+    }
+
+    res.json({
+      message: "These are your purchases",
+      purchases,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Something went wrong", details: err });
+  }
+});
 
 
 

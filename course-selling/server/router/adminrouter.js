@@ -53,7 +53,7 @@ admin.post("/signin", async (req,res )=> {
         const token= jwt.sign({
             id: user._id
 
-        }, process.env.JWT_USER_PASSWORD);
+        }, process.env.JWT_ADMIN_PASSWORD);
 
         res.json({ token: token, message: " sign in successfull" })
     }else{
@@ -75,27 +75,23 @@ admin.post("/coursescreation",authware, async (req,res)=>{
     res.status(200).json({message:"this is my protected route, course created", course: course._id})
 })
 
-admin.put("/course", authware, async function(req,res){
+admin.put("/course", authware, async (req, res) => {
+    const adminId = req.user.id; // make sure authware sets req.user.id
+    const { title, description, price, imageUrl, courseId } = req.body;
 
-    const adminId= req.userId
-    const {title,description,price,imageUrl, courseId} = req.body;
+    const updatedCourse = await courseModel.findOneAndUpdate(
+        { _id: courseId, createdId: adminId }, // only allow creator
+        { title, description, price, imageUrl },
+        { new: true } // return the updated document
+    );
 
-    const updatedcourse= await courseModel.updateOne({
-         _id: courseId,
-          createdId:adminId
-    },{
+    if (!updatedCourse) {
+        return res.status(403).json({ message: "You are not the creator of this course or course not found" });
+    }
 
-        title,
-         description,
-         price,
-         imageUrl,
-         
-    })
-    if(!updatedcourse) return res.json({message: "You are not the creator of the course, invalid request"})
-  
-    res.json({ message: "course updated", courseId: updatedcourse._id})
+    res.json({ message: "Course updated", course: updatedCourse });
+});
 
-})
 
 
 admin.get("/mycourses", authware,async(req,res)=>{
@@ -115,3 +111,5 @@ admin.get("/mycourses", authware,async(req,res)=>{
 
 
 export default admin
+
+
