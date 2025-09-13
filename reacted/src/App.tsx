@@ -83,19 +83,17 @@ setList(prev=>[...prev, object])
 
 export default App
 
-class counter extends Component{
+interface People {
 
- constructor(props){
-  super(prop);
-  this.state= {count:0}
+  name: string ;
+  age: number;
+}
 
-
- }
-
-
- increament=()=>{
-  this.setState({ count: this.state.count + 1})
- }
- component Did Mount(){}
-
+class Manager implements People {
+ name;
+ age;
+  constructor(name: string, age: number){
+    this.name= name;
+    this.age= age;
+  }
 }
