@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from "mongoose"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
+import { UserModel } from './models.js'
 
 
 const app = express();
@@ -15,8 +16,21 @@ if (!mongoUrl) {
 mongoose.connect(mongoUrl).then(() => console.log("MongoDB connected")).catch((err) => console.error("Error connecting MongoDB", err));
 
 
+app.listen(3000,()=>console.log("Listening at port 3000"))
 
-app.post("/api/v1/signup", (req,res)=>{
+
+
+app.post("/api/v1/signup", async(req,res)=>{
+
+	const {username, password} = req.body;
+
+	await UserModel.create({
+
+		username: username,
+		password: password
+	})
+   
+	 res.json({ message: "User signed up  "})
 
 
 } )
