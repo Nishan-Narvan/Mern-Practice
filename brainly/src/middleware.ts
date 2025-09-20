@@ -13,7 +13,7 @@ const JWT_SECRET = "12345"
 export const userMiddleware = (req: Request, res: Response, next : NextFunction) =>{
 
 
-    const header = req.headers["authorization"];
+    const header = req.headers.authorization;;
     if (!header) {
         return res.status(401).json({ message: "Authorization header missing" });
     }
