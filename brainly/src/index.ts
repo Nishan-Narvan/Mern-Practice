@@ -6,10 +6,11 @@ import bcrypt from "bcrypt"
 import { ContentModel, UserModel, LinkModel } from './models.js'
 import { userMiddleware } from './middleware.js'
 import { random } from './utils.js'
-
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 dotenv.config();
 
 
@@ -28,8 +29,15 @@ app.listen(3000,()=>console.log("Listening at port 3000"))
 
 app.post("/api/v1/signup", async(req,res)=>{
 
-try{	const {username, password} = req.body;
-
+try{	
+	
+	
+	
+	const {username, password} = req.body;
+     
+	 if (!username || !password) {
+      return res.status(400).json({ message: "Username and password are required" });
+    }
 
 	const existingUser = await UserModel.findOne({ username });
    
@@ -46,7 +54,8 @@ try{	const {username, password} = req.body;
    
 	 res.json({ message: "User signed up  "})
 }catch(err){
-	console.log("error occured", err)
+	 console.error("Signup error ❌", err);
+    return res.status(500).json({ message: "Server error, please try again." })
 }
 
 } )
@@ -58,6 +67,12 @@ app.post("/api/v1/signin", async(req,res)=>{
 	try{
 		
 		const {username, password} = req.body;
+      
+		if(!username || !password){
+			return res.status(400).json({message: "Username and password are required"})
+
+		}
+
 		const existingUser = await UserModel.findOne({
 
 			username
@@ -74,7 +89,7 @@ app.post("/api/v1/signin", async(req,res)=>{
 		const isPassvalid = await bcrypt.compare(password, existingUser.password);
 
 
-		if(!isPassvalid) return res.json({ message: "Invalid credentials"})
+		if(!isPassvalid) return res.status(400).json({ message: "Invalid credentials"})
         
 
 			const token = jwt.sign({id: existingUser._id}, JWT_SECRET, {

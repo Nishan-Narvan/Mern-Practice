@@ -35,7 +35,7 @@ export function Card({title, link,type}: CardProps) {
     ;
   return (
     <div>
-      <div className="p-8 m-5 bg-gray-400 rounded-md border-2-blue-500 max-w-72 min-h-72">
+      <div className="p-8 m-5 bg-violet-300 rounded-md border-2-blue-500 max-w-72 min-h-72">
       <div className="flex  justify-between items-center text-md">
         <div className=" flex text-gray-500 gap-2">
           <ShareIcon/>
