@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import bcrypt from "bcrypt"
-import { ContentModel, UserModel, LinkModel } from './models.js'
+import { ContentModel, UserModel, LinkModel, TagModel } from './models.js'
 import { userMiddleware } from './middleware.js'
 import { random } from './utils.js'
 import cors from "cors";
@@ -251,3 +251,45 @@ app.get("/api/v1/brain/:shareLink", async(req,res)=>{
     res.status(500).json({ message: "Server error" });
   }
 } )
+
+
+app.get("/api/v1/tags", userMiddleware, async (req, res) => {
+	// @ts-ignore
+	const tags = await TagModel.find({ userId: req.userId });
+	res.json({ tags });
+});
+
+app.post("/api/v1/tags", userMiddleware, async (req,res)=>{
+  const { name } = req.body;
+  if(!name) return res.status(400).json({ message: "Tag name required" });
+  // @ts-ignore
+  const existing = await TagModel.findOne({ name, userId: req.userId });
+  if(existing) return res.status(400).json({ message: "Tag exists" });
+  // @ts-ignore
+  const tag = await TagModel.create({ name, userId: req.userId });
+  res.status(201).json({ tag });
+});
+
+app.delete("/api/v1/tags/:id", userMiddleware, async (req, res) => {
+	try{
+	const id= req.params.id;
+	//@ts-ignore
+	const userId = req.userId;
+
+
+	const tag = await TagModel.findOne({_id: id, userId})
+  
+	  if (!tag) {
+      return res.status(404).json({ message: "Tag not found or unauthorized" });
+    }
+   
+
+	 await TagModel.deleteOne({ _id: id, userId });
+
+    res.json({ message: "Tag deleted successfully", id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete tag" });
+  }
+
+})
