@@ -93,7 +93,7 @@ app.post("/api/v1/signin", async(req,res)=>{
         
 
 			const token = jwt.sign({id: existingUser._id}, JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "4h",
     })
 
 	res.json({ token, message:"You are signed in"})
@@ -112,7 +112,7 @@ app.post("/api/v1/signin", async(req,res)=>{
 
 app.post("/api/v1/content", userMiddleware, async (req, res) => {
   try {
-    const { title, desc, link, tags } = req.body; // tags = array of tag IDs
+    const { title, desc, link, contentType,tags } = req.body; // tags = array of tag IDs
 
     if (!title || !link) {
       return res.status(400).json({ message: "Title and link are required" });
@@ -122,6 +122,7 @@ app.post("/api/v1/content", userMiddleware, async (req, res) => {
       title,
       desc,
       link,
+	  contenttype: contentType,
       tags,           // array of ObjectIds
 	  //@ts-ignore
       userId: req.userId
@@ -178,40 +179,32 @@ app.post("/api/v1/brain/share",userMiddleware, async (req,res)=>{
 	try{
 
 	const {share}= req.body;
-	if(share){
-    
+	if (share) {
+  // @ts-ignore
+  let existing = await LinkModel.findOne({ userId: req.userId });
 
-		// @ts-ignore
-		let existing = await LinkModel.findOne({ userId: req.userId})
-		
-		
-	     	if(!existing){
-	     		const existing =  await LinkModel.create({
-	     		//@ts-ignore
-	     		userId: req.userId,
-	     		hash: random(10)
-	     	
-	     	
-	     	})
+  if (!existing) {
+    existing = await LinkModel.create({
+      // @ts-ignore
+      userId: req.userId,
+      hash: random(10),
+    });
+  }
 
-			return res.json({ 
-				message: "Sharable link enabled",
-				link: `http://localhost:3000/api/v1/brain/${existing.hash}`
+  return res.json({
+    message: `Sharable link enabled => Go to the link : http://localhost:5173/brain/${existing.hash}=>it's on your clipboard`,
+    link: `http://localhost:5173/brain/${existing.hash}`,
+  });
+} else {
+  await LinkModel.deleteMany({
+    // @ts-ignore
+    userId: req.userId,
+  });
 
-				//giving user the endpoint ehich could get them content
-			})
-	     }
-	}else{
-		await  LinkModel.deleteMany({
-			//@ts-ignore
-			userId: req.userId
-		})
-	}
-
-	res.json({
-		message: "Updated sharable link"
-	})
-
+  return res.json({
+    message: "Sharable link disabled",
+  });
+}
 
     }catch(err){
 		console.log(err);
@@ -221,10 +214,10 @@ app.post("/api/v1/brain/share",userMiddleware, async (req,res)=>{
 
 
 
-app.get("/api/v1/brain/:shareLink", async(req,res)=>{
+app.get("/api/v1/brain/:shareId", async(req,res)=>{
  
  try{
-	const hash = req.params.shareLink;
+	const hash = req.params.shareId;
 	const link = await LinkModel.findOne({
 		hash
 	})
@@ -254,8 +247,14 @@ app.get("/api/v1/brain/:shareLink", async(req,res)=>{
 
 
 app.get("/api/v1/tags", userMiddleware, async (req, res) => {
+
+
+
 	// @ts-ignore
 	const tags = await TagModel.find({ userId: req.userId });
+
+    
+
 	res.json({ tags });
 });
 

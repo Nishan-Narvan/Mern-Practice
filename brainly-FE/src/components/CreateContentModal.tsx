@@ -17,6 +17,9 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
 
+
+  const [contentType, setContentType] = useState("");
+
   const titleRef = useRef<HTMLInputElement>(null);
   const linkRef = useRef<HTMLInputElement>(null);
   const descRef = useRef<HTMLInputElement>(null);
@@ -96,7 +99,7 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
     try {
       const res = await axios.post(
         `${BACKEND_URL}/api/v1/content`,
-        { title, link, desc, tags: selectedTags },
+        { title, link, desc, contentType,tags: selectedTags },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       alert(res.data.message || "Content added");
@@ -111,10 +114,10 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
   return (
     <div
       onClick={onClose}
-      className="w-screen h-screen bg-black/80 fixed top-0 left-0 flex justify-center items-center"
+      className="w-screen h-screen bg-black/80 fixed top-0 left-0 flex justify-center items-center "
     >
-      <div onClick={(e) => e.stopPropagation()} className="flex flex-col items-center">
-        <span className="bg-white p-4  rounded-lg w-96 items-center">
+      <div onClick={(e) => e.stopPropagation()} className="flex flex-col items-center max-w-2xl w-full mx-4">
+        <span className="bg-gradient-to-br from-violet-100 via-violet-300 to-violet-400 rounded-lg w-full p-6 items-center">
           <div onClick={onClose} className="flex justify-end cursor-pointer mb-2">
             <CrossIcon />
           </div>
@@ -141,6 +144,22 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
     ref={descRef}
     placeholder="Description"
   />
+
+  <select
+    value={contentType}
+    onChange={(e) => setContentType(e.target.value)}
+     className="w-full border border-gray-300 rounded-lg px-3 py-2 
+               focus:outline-none focus:ring-2 focus:ring-violet-300 
+               focus:border-[#4544D9] transition"
+  >
+    <option value="" disabled>
+      Select your content type
+    </option>
+    <option value="youtube">YouTube</option>
+    <option value="twitter">Twitter</option>
+    <option value="notion">Notion</option>
+    <option value="other">Other</option>
+  </select>
 </div>
 
           {/* Tag Selection */}
@@ -193,7 +212,7 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
                 </div>
 
           <div className="flex justify-center">
-            <Button onClick={addContent} text="Submit" variant="primary" />
+            <Button onClick={addContent} text="Submit" variant="primary" startIcon={<div></div>} loading={false} />
           </div>
         </span>
       </div>

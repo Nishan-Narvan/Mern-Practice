@@ -8,6 +8,7 @@ interface ButtonProps {
     onClick?: ()=>void;
     fullWidth?:boolean;
     loading: boolean;
+    extrastyles?:string;
 }
 
 
@@ -19,9 +20,9 @@ const variantClasses= {
 
 const defaultStyles= "px-4 ml-3 py-2 rounded-md font-light flex items-center"
 
-export function Button({variant, text, startIcon, onClick, loading,fullWidth}: ButtonProps){
+export function Button({variant, text, startIcon, onClick, loading,fullWidth,extrastyles}: ButtonProps){
 
-    return <button onClick={onClick} className={variantClasses[variant] +" " + defaultStyles + `${fullWidth ? " w-full flex items-center justify-center" : ""}` +`${ loading ? " opacity-55":""}`}>
+    return <button onClick={onClick} className={variantClasses[variant] +" " + defaultStyles + extrastyles+`${fullWidth ? " w-full flex items-center justify-center" : ""}` +`${ loading ? " opacity-55":""}`}>
         <div className="pr-2">
             {startIcon}
         </div>
