@@ -1,3 +1,4 @@
+import { All } from "../icons/All"
 import { Brain } from "../icons/Brain"
 import { Notion } from "../icons/Notion"
 import { Others } from "../icons/Others"
@@ -24,9 +25,9 @@ export function Sidebar({ setFilterType }: { setFilterType: (type: string) => vo
           bg-gradient-to-br from-purple-100 via-violet-400 to-violet-100 
           bg-opacity-80 border-4 border-purple-700 rounded-3xl w-36 shadow-lg"
       >
-        <div className="w-full mb-2 ml-4">
+        <div className="w-full mb-2 ">
           <button onClick={() => setFilterType("all")} className="w-full">
-            <SidebarItem text="All" icon={<Others />} />
+            <SidebarItem text="All" icon={<All />} />
           </button>
         </div>
         <div className="w-full mb-2">
