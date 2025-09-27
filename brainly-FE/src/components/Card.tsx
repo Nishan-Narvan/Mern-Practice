@@ -51,9 +51,7 @@ export function Card({ title, link, type }: CardProps) {
                 <Link />
               </a>
             </div>
-            <div className="text-gray-500">
-              <ShareIcon />
-            </div>
+            
           </div>
         </div>
 
