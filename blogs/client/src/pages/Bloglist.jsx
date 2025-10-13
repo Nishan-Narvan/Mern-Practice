@@ -14,14 +14,16 @@ export default function BlogList() {
   );
 
   return (
-    <div>
+    <div style={{ display:"flex", flexDirection:"column", justifyContent:"center",marginTop:"100px", alignItems:"center"}}>
+      
       {blogs.length === 0 ? <p>No blogs yet</p> : (
-        blogs.map((b) => (
+        blogs.map((b) => (<div style={{ width:"990px", backgroundColor:"black"}}>
           <article key={b._id || b.id} style={{ border: "1px solid #ddd", padding: 12, marginBottom: 8 }}>
             <h3>{b.title}</h3>
             <p>{b.content}</p>
             <small>By {b.author || "Unknown"} • {new Date(b.createdAt).toLocaleString()}</small>
           </article>
+          </div>
         ))
       )}
     </div>

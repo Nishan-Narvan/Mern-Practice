@@ -30,13 +30,22 @@ const Addblog = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
+    <form onSubmit={handleSubmit} style={{ marginBottom: 20 , display:"flex",flexDirection:"column", justifyContent:"center", marginTop:"200px",alignItems:"center",
+      width: "100%", padding: 8,
+    }}>
       <div>
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Title"
-          style={{ width: "100%", padding: 8 }}
+          style={{
+            border: "2px solid #444",
+            borderRadius: "4px",
+            padding: "10px",
+            width: "400px",
+            marginBottom: "16px",
+            fontSize: "16px"
+          }}
         />
       </div>
       <div>
@@ -45,7 +54,15 @@ const Addblog = () => {
           onChange={(e) => setContent(e.target.value)}
           placeholder="Content"
           rows={6}
-          style={{ width: "100%", padding: 8, marginTop: 8 }}
+          style={{
+            border: "2px solid #444",
+            borderRadius: "4px",
+            padding: "10px",
+            width: "400px",
+            marginBottom: "16px",
+            fontSize: "16px",
+            resize: "vertical"
+          }}
         />
       </div>
       {localError && <div style={{ color: "red" }}>{localError}</div>}
