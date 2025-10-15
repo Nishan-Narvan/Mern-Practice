@@ -1,11 +1,12 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-import User from './models/User.js';
+import { User, Account } from './models/User.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import authMiddleware from './Middlewares/auth.js'
 import router from './Router/router1.js';
+import cors from 'cors'
 const app = express();
 dotenv.config();
 app.use(express.json());

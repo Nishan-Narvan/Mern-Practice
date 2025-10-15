@@ -1,6 +1,8 @@
 import express from 'express'
 import zod from 'zod'
-
+import { User,Account } from '../models/User.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'
 const userrouter = express.Router();
 
 
@@ -30,7 +32,7 @@ userrouter.post("/signup", async (req, res)=>{
         const exist =await User.findOne({
             username: username
         })
-        if(exist._id){
+        if(exist){
             return res.json({
                 message:"User alreay exists, please sign in"
             })
@@ -44,8 +46,17 @@ userrouter.post("/signup", async (req, res)=>{
             lastName
         })
 
+
+         const userId = user._id 
+
+        const createdacc=await Account.create({
+
+            userId: userId,
+            balance: 1+ Math.random()*1000
+        })
+
         return res.json({
-            message: "User successfully created", user: user
+            message: "User successfully created", user: user, created: createdacc
         }) 
     }catch(err){
      
@@ -81,10 +92,10 @@ userrouter.post("/signin", async(req, res)=>{
             })
 
         }
-
-        const token = jwt.sign({user},JWT_KEY,{
-            expiresIn:"1h"
-
+             const userId = user._id 
+       
+        const token = jwt.sign({ userId }, JWT_KEY, {
+            expiresIn: "1h"
         })
 
         return res.json({

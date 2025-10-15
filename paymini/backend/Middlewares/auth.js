@@ -7,14 +7,22 @@ export default async function authmiddleware(req,res,next){
 
     try{
 
-        const auth = req.headers.authorization;
-        const token = auth.split(" ")[1];
-
-        if(!auth ||!token){
-            return res.json({
-                message: "Auth header or token is missing"
+         const auth = req.headers.authorization;
+        
+        if(!auth){
+            return res.status(401).json({
+                message: "Auth header is missing"
             })
         }
+
+           const token = auth.split(" ")[1];
+
+        if(!token){
+            return res.status(401).json({
+                message: "Token is missing"
+            })
+        }
+
 
         const decoded = jwt.verify(token, JWT_key)
 
@@ -25,12 +33,15 @@ export default async function authmiddleware(req,res,next){
         }
 
         req.userId= decoded.userId;
-        console.log(req.userdata);
+        
 
         next();
     
     }catch(err){
-        console.log(`this is the error ${err}`)
+        console.log(`Auth error: ${err}`)
+        return res.status(401).json({
+            message: "Invalid token"
+        });
     }
 
 }
