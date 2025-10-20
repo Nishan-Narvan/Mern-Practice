@@ -1,6 +1,6 @@
 import React from 'react'
 import {useState} from 'react'
-import { FaUser, FaUserCircle, FaIdBadge, FaLock } from "react-icons/fa";
+import { FaUser, FaUserCircle, FaIdBadge, FaLock, FaEyeSlash } from "react-icons/fa";
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 
@@ -50,24 +50,24 @@ const [signdone, setSigndone] = useState(false)
 if(signdone){
   return (
     <div className="relative h-screen w-full overflow-hidden flex items-center justify-center">
-      {/* Background Image */}
+      
       <img
-        src="https://images.unsplash.com/photo-1521790366323-4d5a0c65a9b8?auto=format&fit=crop&w=1200&q=80"
+        src="https://images.unsplash.com/photo-1550565118-3a14e8d0386f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470"
         alt="Background"
         className="absolute inset-0 w-full h-full object-cover brightness-75 -z-10"
       />
 
       {/* Overlay content */}
-      <div className="text-center text-white px-6">
-        <h1 className="text-5xl font-bold mb-4 drop-shadow-lg">
+      <div className="text-center text-white px-6 mt-22">
+        <h1 className="text-5xl font-bold  drop-shadow-lg -translate-y-27">
           Welcome to Your Dashboard
         </h1>
-        <p className="text-lg mb-6 text-gray-200 max-w-md mx-auto">
+        <p className="text-lg mb-6 text-white font-mono max-w-md mx-auto -translate-y-20">
           Transfer funds, manage your account, and track transactions — all in one place.
         </p>
         <button
           onClick={() => navigate("/signin")}
-          className="px-6 py-3 bg-blue-600 hover:scale-150 ease-in-out hover:bg-blue-700 rounded-full font-semibold transition duration-300 shadow-lg hover:shadow-2xl hover:shadow-blue-800 cursor-pointer"
+          className="px-6 -translate-y-20 py-3 bg-blue-600 hover:scale-150 ease-in-out hover:bg-blue-700 rounded-full font-semibold transition duration-300 shadow-lg hover:shadow-2xl hover:shadow-blue-800 cursor-pointer"
         >
           Go to Signin →
         </button>
@@ -79,12 +79,14 @@ if(signdone){
 
 return (
     <>
-        <div className="flex items-center justify-center min-h-screen bg-black">
+        <div className="flex w-screen h-screen items-center justify-center bg-black">
             <form
                 onSubmit={handleSubmit}
-                className="flex flex-col gap-3 max-w-sm w-full p-4 border rounded-lg bg-white shadow"
+                className="flex flex-col gap-4 max-w-sm font-mono text-xl h-120  w-full p-4 mb-6 border rounded-xl  bg-white/90 "
             >
-                <div className="relative">
+                
+                <div className='m-7 text-center text-4xl'> Sign Up</div>
+                <div className="relative hover:bg-white duration-300">
                     <FaUserCircle className="absolute left-2 top-3 text-gray-400" />
                     <input
                         type="text"
@@ -96,7 +98,7 @@ return (
                         className="border p-2 pl-8 rounded w-full"
                     />
                 </div>
-                <div className="relative">
+                <div className="relative hover:bg-white duration-300">
                     <FaUser className="absolute left-2 top-3 text-gray-400" />
                     <input
                         type="text"
@@ -108,7 +110,7 @@ return (
                         className="border p-2 pl-8 rounded w-full"
                     />
                 </div>
-                <div className="relative">
+                <div className="relative hover:bg-white duration-300">
                     <FaIdBadge className="absolute left-2 top-3 text-gray-400" />
                     <input
                         type="text"
@@ -120,7 +122,7 @@ return (
                         className="border p-2 pl-8 rounded w-full"
                     />
                 </div>
-                <div className="relative">
+                <div className="relative hover:bg-white duration-300">
                     <FaLock className="absolute left-2 top-3 text-gray-400" />
                     <input
                         type={showPassword ? "text" : "password"}
@@ -134,15 +136,16 @@ return (
                     <button
                         type="button"
                         onClick={() => setShowPassword((prev) => !prev)}
-                        className="absolute right-2 top-2 text-gray-600"
+                        className="absolute right-2   top-2 text-gray-600"
                         tabIndex={-1}
                     >
-                        {showPassword ? "🫣" : "👁️"}
+                        {showPassword ? <FaEyeSlash/> : "👁"}
                     </button>
                 </div>
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+                <button type="submit" className="bg-blue-500 text-white p-2 mt-3 rounded-lg shadow-2xl hover:scale-105 duration-200 hover:-translate-y-2">
                     Submit
                 </button>
+                <div className='text-center text-sm text-gray-500 '>@PAYmini</div>
             </form>
         </div>
     </>

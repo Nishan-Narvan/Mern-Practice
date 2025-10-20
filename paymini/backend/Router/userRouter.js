@@ -3,6 +3,7 @@ import zod from "zod";
 import { User, Account } from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import authmiddleware from "../Middlewares/auth.js";
 const userrouter = express.Router();
 
 const signupSchema = zod.object({
@@ -89,20 +90,25 @@ userrouter.post("/signin", async (req, res) => {
   }
 });
 
-userrouter.get("/bulk", async (req, res) => {
+userrouter.get("/bulk",authmiddleware, async (req, res) => {
   try {
     const filter = req.query.filter || "";
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10; 
+
+   const skip= (page - 1)*limit
 
     const users = await User.find({
       $or: [
         { firstName: { $regex: filter, $options: "i" } },
         { lastName: { $regex: filter, $options: "i" } },
       ],
-    });
+    }).skip(skip).limit(limit)
+    ;
 
     res.json({
       users: users.map((user) => ({
-        username: user.username,
+        email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
         _id: user._id,
@@ -113,5 +119,29 @@ userrouter.get("/bulk", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+userrouter.get("/me", authmiddleware,async(req,res)=>{
+
+   try {
+    const user = await User.findById(req.userId).select("firstName lastName email");
+    res.json({ user });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching user details" });
+  }
+})
+
+
+userrouter.get("/:id", authmiddleware, async (req, res) => {
+  try {
+        console.log("Params received:", req.params);
+
+    const user = await User.findById(req.params.id).select("firstName lastName ");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json({ user });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching recipient info" });
+  }
+});
+
 
 export default userrouter;

@@ -19,7 +19,7 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />}></Route>
       <Route path="/transfer" element={<Transfer />}></Route>
       <Route path="/dashboard" element={<dashboard/>}></Route>
-      <Route path="/transfer" element={<transfer/>}></Route>
+      <Route path="/transfer/:id" element={<Transfer/>}></Route>
      </Routes>
      </BrowserRouter>
     </>
